@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
+const moment = require("moment-timezone");
 const port = 6969;
-const { format, fromUnixTime } = require("date-fns");
 var nodemailer = require("nodemailer");
 const cors = require("cors");
 app.use(cors());
@@ -12,6 +12,9 @@ var transporter = nodemailer.createTransport({
     pass: "dcql iave mxcf vhmv",
   },
 });
+
+const dkTime = moment().tz("Europe/Copenhagen").format("HH:mm");
+const dkDate = moment().tz("Europe/Copenhagen").format("DD/MM/YYYY");
 
 function sendMail(action, time, data) {
   var mailOptions = {
@@ -31,23 +34,14 @@ function sendMail(action, time, data) {
 }
 
 app.get("/api/start", (req, res) => {
-  let timestamp = new Date().getTime();
-  let unixTimestamp = timestamp;
-  let date = fromUnixTime(unixTimestamp / 1000);
   const data = req.query;
-  let formattedDate = format(date, "dd-MM-yyyy");
-  let formattedTime = format(date, "HH:mm");
 
   console.log("klokken er:", formattedTime);
 
-  sendMail(
-    `${data.firstName} har stemplet ${data.checkId}`,
-    formattedTime,
-    formattedDate
-  );
+  sendMail(`${data.firstName} har stemplet ${data.checkId}`, dkTime, dkDate);
 
   console.log(data);
-  res.json({ time: formattedTime, date: formattedDate });
+  res.json({ time: dkTime, date: dkDate });
 });
 
 app.listen(port, () => {
