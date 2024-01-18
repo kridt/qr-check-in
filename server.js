@@ -36,8 +36,6 @@ function sendMail(action, time, data) {
 app.get("/api/start", (req, res) => {
   const data = req.query;
 
-  console.log("klokken er:", formattedTime);
-
   sendMail(`${data.firstName} har stemplet ${data.checkId}`, dkTime, dkDate);
 
   console.log(data);
