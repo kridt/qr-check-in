@@ -62,15 +62,15 @@ app.get("/api/start", (req, res) => {
       firstName: data.firstName,
       lastName: data.lastName,
       coworkerId: data.coworkerId,
-      time: dkTime,
-      date: dkDate,
+      time: data.time.split(" ")[1],
+      date: data.time.split(" ")[0],
     })
 
     .then(() => {
       sendMail(
         `${data.firstName} har stemplet ${data.checkId}`,
-        dkTime,
-        dkDate
+        data.time.split(" ")[1],
+        data.time.split(" ")[0]
       );
       res.status(200).send("OK");
     })
